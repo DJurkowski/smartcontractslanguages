@@ -1,0 +1,106 @@
+{
+  "version": "0.1.0",
+  "name": "predsident_election",
+  "instructions": [
+    {
+      "name": "initialize",
+      "accounts": [
+        {
+          "name": "voteAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "voteAccountBump",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "voteCrunchy",
+      "accounts": [
+        {
+          "name": "voteAccount",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "citizenKey",
+          "type": "publicKey"
+        }
+      ]
+    },
+    {
+      "name": "voteSmooth",
+      "accounts": [
+        {
+          "name": "voteAccount",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "citizenKey",
+          "type": "publicKey"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "VotingState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "crunchy",
+            "type": "u64"
+          },
+          {
+            "name": "smooth",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "validator",
+            "type": "publicKey"
+          },
+          {
+            "name": "citizens",
+            "type": {
+              "vec": "publicKey"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "CitizenAlreadyVote",
+      "msg": "Citizen already voted."
+    }
+  ],
+  "metadata": {
+    "address": "AfAEnKXzWJBsJr7sd7MTf7xCNnvC3hiXiYWjF5waf1Pg"
+  }
+}
