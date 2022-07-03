@@ -15,13 +15,13 @@ export default function ElectionProgress({ votes }) {
 
   function getProgress() {
     if (
-      typeof votes.crunchy !== "number" ||
-      typeof votes.smooth !== "number" ||
-      votes.crunchy + votes.smooth === 0
+      typeof votes.candidateOneNumberOfVotes !== "number" ||
+      typeof votes.candidateTwoNumberOfVotes !== "number" ||
+      votes.candidateOneNumberOfVotes + votes.candidateTwoNumberOfVotes === 0
     ) {
       return 50;
     }
-    return (votes.crunchy / (votes.smooth + votes.crunchy)) * 100;
+    return (votes.candidateOneNumberOfVotes / (votes.candidateTwoNumberOfVotes + votes.candidateOneNumberOfVotes)) * 100;
   }
 
   return (
@@ -37,16 +37,16 @@ export default function ElectionProgress({ votes }) {
       <Box display="flex" justifyContent="space-between">
         <Box>
           <Typography variant="h3">
-            {formatWithCommas(votes.crunchy)}
+            {formatWithCommas(votes.candidateOneNumberOfVotes)}
           </Typography>
           <Typography variant="h6">
-            {percentize(votes.crunchy / (votes.crunchy + votes.smooth))}
+            {percentize(votes.candidateOneNumberOfVotes / (votes.candidateOneNumberOfVotes + votes.candidateTwoNumberOfVotes))}
           </Typography>
         </Box>
         <Box textAlign="right">
-          <Typography variant="h3">{formatWithCommas(votes.smooth)}</Typography>
+          <Typography variant="h3">{formatWithCommas(votes.candidateTwoNumberOfVotes)}</Typography>
           <Typography variant="h6">
-            {percentize(votes.smooth / (votes.crunchy + votes.smooth))}
+            {percentize(votes.candidateTwoNumberOfVotes / (votes.candidateOneNumberOfVotes + votes.candidateTwoNumberOfVotes))}
           </Typography>
         </Box>
       </Box>

@@ -17,7 +17,7 @@ export default function Navbar({ voteAccount }) {
             <Link
               className={classes.link}
               underline="always"
-              href={`https://explorer.solana.com/address/${voteAccount?.toString()}`}
+              href={`https://explorer.solana.com/address/${voteAccount?.toString()}?cluster=devnet`}
             >
               Show Transactions
             </Link>

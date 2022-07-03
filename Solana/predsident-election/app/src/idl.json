@@ -29,7 +29,7 @@
       ]
     },
     {
-      "name": "voteCrunchy",
+      "name": "voteForCandidateOne",
       "accounts": [
         {
           "name": "voteAccount",
@@ -45,7 +45,7 @@
       ]
     },
     {
-      "name": "voteSmooth",
+      "name": "voteForCandidateTwo",
       "accounts": [
         {
           "name": "voteAccount",
@@ -63,16 +63,16 @@
   ],
   "accounts": [
     {
-      "name": "VotingState",
+      "name": "ElectionState",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "crunchy",
+            "name": "candidateOneNumberOfVotes",
             "type": "u64"
           },
           {
-            "name": "smooth",
+            "name": "candidateTwoNumberOfVotes",
             "type": "u64"
           },
           {
@@ -101,6 +101,6 @@
     }
   ],
   "metadata": {
-    "address": "AfAEnKXzWJBsJr7sd7MTf7xCNnvC3hiXiYWjF5waf1Pg"
+    "address": "GPf4Q7iVPrJ9YN9pBQwseykQYdJyzuATkhHc2wK7E4vJ"
   }
 }

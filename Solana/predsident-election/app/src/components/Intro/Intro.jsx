@@ -40,8 +40,8 @@ export default function Intro({
           </Typography>
         )}
       </Box>
-      {(typeof votes.crunchy !== "number" ||
-        typeof votes.crunchy !== "number") &&
+      {(typeof votes.candidateOneNumberOfVotes !== "number" ||
+        typeof votes.candidateOneNumberOfVotes !== "number") &&
         wallet.connected && (
           <Box marginTop="8px">
             <Typography variant="body1">

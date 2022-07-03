@@ -22,8 +22,8 @@ export default function Main({ voteAccount, voteAccountBump, network }) {
   const wallet = useWallet();
 
   const [votes, setVotes] = useState({
-    crunchy: null,
-    smooth: null,
+    candidateOneNumberOfVotes: null,
+    candidateTwoNumberOfVotes: null,
   });
   const [voteTxHistory, setVoteTxHistory] = useState([]);
 
@@ -35,10 +35,10 @@ export default function Main({ voteAccount, voteAccountBump, network }) {
       const provider = new Provider(connection, wallet, preflightCommitment);
       const program = new Program(idl, programID, provider);
       try {
-        const account = await program.account.votingState.fetch(voteAccount);
+        const account = await program.account.electionState.fetch(voteAccount);
         setVotes({
-          crunchy: account.crunchy?.toNumber(),
-          smooth: account.smooth?.toNumber(),
+          candidateOneNumberOfVotes: account.candidateOneNumberOfVotes?.toNumber(),
+          candidateTwoNumberOfVotes: account.candidateTwoNumberOfVotes?.toNumber(),
         });
         console.log(account.validator.toString());
       } catch (error) {
@@ -70,11 +70,11 @@ export default function Main({ voteAccount, voteAccountBump, network }) {
         },
       });
       console.log('User!!!: ', provider.wallet.publicKey.toString());
-      const account = await program.account.votingState.fetch(voteAccount);
+      const account = await program.account.electionState.fetch(voteAccount);
       console.log('User2!!!: ', provider.wallet.publicKey.toString());
       setVotes({
-        crunchy: account.crunchy?.toNumber(),
-        smooth: account.smooth?.toNumber(),
+        candidateOneNumberOfVotes: account.candidateOneNumberOfVotes?.toNumber(),
+        candidateTwoNumberOfVotes: account.candidateTwoNumberOfVotes?.toNumber(),
       });
       enqueueSnackbar("Vote account initialized", { variant: "success" });
     } catch (error) {
@@ -91,21 +91,21 @@ export default function Main({ voteAccount, voteAccountBump, network }) {
     try {
       const tx =
         side === "CandidateOne"
-          ? await program.rpc.voteCrunchy(provider.wallet.publicKey, {
+          ? await program.rpc.voteForCandidateOne(provider.wallet.publicKey, {
               accounts: {
                 voteAccount,
               },
             })
-          : await program.rpc.voteSmooth(provider.wallet.publicKey, {
+          : await program.rpc.voteForCandidateTwo(provider.wallet.publicKey, {
               accounts: {
                 voteAccount,
               },
             });
 
-      const account = await program.account.votingState.fetch(voteAccount);
+      const account = await program.account.electionState.fetch(voteAccount);
       setVotes({
-        crunchy: account.crunchy?.toNumber(),
-        smooth: account.smooth?.toNumber(),
+        candidateOneNumberOfVotes: account.candidateOneNumberOfVotes?.toNumber(),
+        candidateTwoNumberOfVotes: account.candidateTwoNumberOfVotes?.toNumber(),
       });
       enqueueSnackbar(`Voted for ${capitalize(side)}!`, { variant: "success" });
       setVoteTxHistory((oldVoteTxHistory) => [...oldVoteTxHistory, tx]);
