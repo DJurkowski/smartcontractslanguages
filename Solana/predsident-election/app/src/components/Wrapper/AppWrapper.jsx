@@ -8,6 +8,7 @@ import { web3 } from "@project-serum/anchor";
 import Main from "../Main/Main";
 
 function AppWrappedWithProviders() {
+
     const { enqueueSnackbar } = useSnackbar();
 
     const [voteAccount, setVoteAccount] = useState({

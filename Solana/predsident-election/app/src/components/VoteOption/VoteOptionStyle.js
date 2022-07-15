@@ -7,5 +7,13 @@ export const voteOptionStyle = makeStyles((theme) => ({
       paddingTop: theme.spacing(2),
       paddingBottom: theme.spacing(2),
       fontSize: "1.2rem",
+      "&:disabled": {
+        background: "#343a40",
+      },
+      "&:hover": {
+        "&:disabled": {
+          background: "#343a40",
+        },
+      },
     },
 }));

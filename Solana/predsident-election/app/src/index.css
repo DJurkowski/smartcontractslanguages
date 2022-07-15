@@ -14,6 +14,8 @@ html {
 
 #root {
   height: 100%;
+  background-color: #222336;
+  color: #babbcc;
 }
 
 code {

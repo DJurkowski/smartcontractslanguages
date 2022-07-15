@@ -40,6 +40,7 @@ export default function Main({ voteAccount, voteAccountBump, network }) {
           candidateOneNumberOfVotes: account.candidateOneNumberOfVotes?.toNumber(),
           candidateTwoNumberOfVotes: account.candidateTwoNumberOfVotes?.toNumber(),
         });
+        console.log('Validator hash: ');
         console.log(account.validator.toString());
       } catch (error) {
         console.log("could not getVotes: ", error);
