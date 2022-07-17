@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { Connection } from "@solana/web3.js";
 import { Program, Provider, web3, BN } from "@project-serum/anchor";
+import ElectionNavbar from "../ElectionNavbar/ElectionNavbar";
 import { Box, Container, Grid } from "@material-ui/core";
+import ElectionIntro from "../ElectionIntro/ElectionIntro";
 import { useSnackbar } from "notistack";
 import idl from "../../idl.json";
+import VoteOption from "../VoteOption/VoteOption";
 import { preflightCommitment, programID } from "../../utils/config";
 import { capitalize } from "../../utils/helpers";
-import Navbar from "../Navbar/Navbar";
-import VoteOption from "../VoteOption/VoteOption";
 import ElectionProgress from "../ElectionProgress/ElectionProgress";
-import Intro from "../Intro/Intro";
-import VoteHistory from "../VoteHistory/VoteHistory";
+import ElectionHistory from "../ElectionHistory/ElectionHistory";
+import { Connection, PublicKey } from "@solana/web3.js";
+import ElectionForm from "../ElectionForm/ElectionForm";
+import ElectionModalButton from "../ElectionModalButton/ElectionModalButton";
 
 const propTypes = {};
 
 const defaultProps = {};
 
-export default function Main({ voteAccount, voteAccountBump, network }) {
+export default function ElectionMain({ voteAccount, voteAccountBump, network }) {
   const { enqueueSnackbar } = useSnackbar();
   const wallet = useWallet();
 
@@ -25,7 +27,8 @@ export default function Main({ voteAccount, voteAccountBump, network }) {
     candidateOneNumberOfVotes: null,
     candidateTwoNumberOfVotes: null,
   });
-  const [voteTxHistory, setVoteTxHistory] = useState([]);
+  const [electionTxHistory, setElectionTxHistory] = useState([]);
+  const [isOpenModal, setIsOpenModal] = useState(false);
 
   useEffect(() => {
     console.log('VoteAccount', voteAccount);
@@ -59,7 +62,7 @@ export default function Main({ voteAccount, voteAccountBump, network }) {
   }
 
   // Initialize the program if this is the first time its launched
-  async function initializeVoting() {
+  async function initializeElection() {
     const provider = await getProvider();
     const program = new Program(idl, programID, provider);
     try {
@@ -93,15 +96,15 @@ export default function Main({ voteAccount, voteAccountBump, network }) {
       const tx =
         side === "CandidateOne"
           ? await program.rpc.voteForCandidateOne(provider.wallet.publicKey, {
-              accounts: {
-                voteAccount,
-              },
-            })
+            accounts: {
+              voteAccount,
+            },
+          })
           : await program.rpc.voteForCandidateTwo(provider.wallet.publicKey, {
-              accounts: {
-                voteAccount,
-              },
-            });
+            accounts: {
+              voteAccount,
+            },
+          });
 
       const account = await program.account.electionState.fetch(voteAccount);
       setVotes({
@@ -109,7 +112,7 @@ export default function Main({ voteAccount, voteAccountBump, network }) {
         candidateTwoNumberOfVotes: account.candidateTwoNumberOfVotes?.toNumber(),
       });
       enqueueSnackbar(`Voted for ${capitalize(side)}!`, { variant: "success" });
-      setVoteTxHistory((oldVoteTxHistory) => [...oldVoteTxHistory, tx]);
+      setElectionTxHistory((oldElectionTxHistory) => [...oldElectionTxHistory, tx]);
     } catch (error) {
       console.log("Transaction error: ", error);
       console.log(error.toString());
@@ -117,16 +120,41 @@ export default function Main({ voteAccount, voteAccountBump, network }) {
     }
   }
 
+  async function handleVerifyCitizen(citizenPublicKey) {
+    setIsOpenModal(false);
+
+    console.log("PubKey citizen");
+    console.log(new PublicKey(citizenPublicKey));
+    console.log(new PublicKey(citizenPublicKey).toString());
+
+    const provider = await getProvider();
+    console.log('User4!!!!', provider.wallet.publicKey.toString());
+    const program = new Program(idl, programID, provider);
+    try {
+      await program.rpc.verifyCitizen(new PublicKey(citizenPublicKey), provider.wallet.publicKey, {
+        accounts: {
+          voteAccount,
+        },
+      });
+
+      enqueueSnackbar(`Citizen was added`, { variant: "success" });
+    } catch (error) {
+      console.log("Adding error: ", error);
+      console.log(error.toString());
+      enqueueSnackbar(`Error: ${error.toString()}`, { variant: "error" });
+    }
+  }
+
   return (
-    <Box height="100%" display="flex" flexDirection="column">
+    <Box display="flex" flexDirection="column" height="100%" >
       <Box flex="1 0 auto">
-        <Navbar voteAccount={voteAccount}/>
+        <ElectionNavbar voteAccount={voteAccount} />
         <Container>
           <Grid container spacing={3}>
             <Grid item xs={12}>
-              <Intro
+              <ElectionIntro
                 votes={votes}
-                initializeVoting={initializeVoting}
+                initializeElection={initializeElection}
                 programID={programID}
                 voteAccount={voteAccount}
               />
@@ -140,15 +168,25 @@ export default function Main({ voteAccount, voteAccountBump, network }) {
             <Grid item xs={6}>
               <VoteOption side="CandidateTwo" isLeftSide={false} handleVote={handleVote} />
             </Grid>
+            <Grid
+             container
+             spacing={0}
+             direction="column"
+             alignItems="center"
+             justify="center"
+            >
+              <ElectionModalButton handleOpenModal={() => setIsOpenModal(true)} />
+            </Grid>
             <Grid item xs={12}>
-              <VoteHistory voteTxHistory={voteTxHistory} />
+              <ElectionHistory electionTxHistory={electionTxHistory} />
             </Grid>
           </Grid>
         </Container>
       </Box>
+      <ElectionForm isOpen={isOpenModal} handleClose={() => setIsOpenModal(false)} handleSubmit={handleVerifyCitizen} />
     </Box>
   );
 }
 
-Main.propTypes = propTypes;
-Main.defaultProps = defaultProps;
+ElectionMain.propTypes = propTypes;
+ElectionMain.defaultProps = defaultProps;

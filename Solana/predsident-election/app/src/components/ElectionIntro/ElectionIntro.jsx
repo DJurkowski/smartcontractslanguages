@@ -1,13 +1,13 @@
 import React from "react";
 import { Box, Button, Link, Typography } from "@material-ui/core";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { introStyle } from './IntroStyle';
+import { electionIntroStyle } from './ElectionIntroStyle';
 
-const useStyles = introStyle;
+const useStyles = electionIntroStyle;
 
-export default function Intro({
+export default function ElectionIntro({
   votes,
-  initializeVoting,
+  initializeElection,
   programID,
   voteAccount,
 }) {
@@ -36,7 +36,7 @@ export default function Intro({
           </Box>
         ) : (
           <Typography variant="body1">
-            To get started, connect your wallet
+            Please, connect your wallet to enable voting option
           </Typography>
         )}
       </Box>
@@ -49,6 +49,7 @@ export default function Intro({
               <Link
                 href={`https://explorer.solana.com/address/${programID.toString()}`}
                 underline="always"
+                style={{ color: "#ffffff" }}
               >
                 program
               </Link>
@@ -56,6 +57,7 @@ export default function Intro({
               <Link
                 href={`https://explorer.solana.com/address/${voteAccount?.toString()}`}
                 underline="always"
+                style={{ color: "#ffffff" }}
               >
                 vote account
               </Link>{" "}
@@ -64,7 +66,7 @@ export default function Intro({
             <Button
               color="primary"
               variant="contained"
-              onClick={initializeVoting}
+              onClick={initializeElection}
               className={classes.button}
             >
               Initialize Program

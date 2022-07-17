@@ -5,7 +5,7 @@ import { WalletDialogProvider } from "@solana/wallet-adapter-material-ui";
 import { useSnackbar } from "notistack";
 import { programID, network, wallets } from "../../utils/config";
 import { web3 } from "@project-serum/anchor";
-import Main from "../Main/Main";
+import ElectionMain from "../ElectionMain/ElectionMain";
 
 function AppWrappedWithProviders() {
 
@@ -43,7 +43,7 @@ function AppWrappedWithProviders() {
     return (
         <WalletProvider wallets={wallets} onError={onWalletError} autoConnect>
         <WalletDialogProvider>
-            <Main
+            <ElectionMain
                 network={network}
                 voteAccount={voteAccount.account}
                 voteAccountBump={voteAccount.accountBump}

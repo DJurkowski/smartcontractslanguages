@@ -1,11 +1,11 @@
 import React from "react";
 import { AppBar, Box, Container, Toolbar, Link } from "@material-ui/core";
 import { WalletMultiButton } from "@solana/wallet-adapter-material-ui";
-import { navbarStyle } from './NavbarStyle';
+import { electionNavbarStyle } from './ElectionNavbarStyle';
 
-const useStyles = navbarStyle;
+const useStyles = electionNavbarStyle;
 
-export default function Navbar({ voteAccount }) {
+export default function ElectionNavbar({ voteAccount }) {
   const classes = useStyles();
   return (
     <AppBar position="static" className={classes.root}>
@@ -18,8 +18,9 @@ export default function Navbar({ voteAccount }) {
               className={classes.link}
               underline="always"
               href={`https://explorer.solana.com/address/${voteAccount?.toString()}?cluster=devnet`}
+              aria-label="Show Solana transactions history"
             >
-              Show Transactions
+              Show history
             </Link>
           </Box>
         </Toolbar>

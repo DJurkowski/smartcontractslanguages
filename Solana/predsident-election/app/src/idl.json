@@ -59,6 +59,26 @@
           "type": "publicKey"
         }
       ]
+    },
+    {
+      "name": "verifyCitizen",
+      "accounts": [
+        {
+          "name": "voteAccount",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "citizenKey",
+          "type": "publicKey"
+        },
+        {
+          "name": "validatorKey",
+          "type": "publicKey"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -88,6 +108,12 @@
             "type": {
               "vec": "publicKey"
             }
+          },
+          {
+            "name": "verifyCitizens",
+            "type": {
+              "vec": "publicKey"
+            }
           }
         ]
       }
@@ -98,6 +124,21 @@
       "code": 6000,
       "name": "CitizenAlreadyVote",
       "msg": "Citizen already voted."
+    },
+    {
+      "code": 6001,
+      "name": "CitizenIsNotVerify",
+      "msg": "Citizen is not verified. Please verify citizen."
+    },
+    {
+      "code": 6002,
+      "name": "CitizenAlreadyVerify",
+      "msg": "Citizen already verified."
+    },
+    {
+      "code": 6003,
+      "name": "VerifyValidator",
+      "msg": "Only validator/contract owner can initilialize citizens."
     }
   ],
   "metadata": {

@@ -12,11 +12,22 @@ pub mod predsident_election {
     pub fn initialize(ctx: Context<Initialize>, vote_account_bump: u8) -> ProgramResult {
         ctx.accounts.vote_account.bump = vote_account_bump;
         ctx.accounts.vote_account.validator = ctx.accounts.user.key();
+        ctx.accounts.vote_account.verify_citizens.push(ctx.accounts.user.key());
         Ok(())
     }
 
     pub fn vote_for_candidate_one(ctx: Context<Vote>, citizen_key: Pubkey) -> Result<()> {
         let election_vote: &mut Account<ElectionState> = &mut ctx.accounts.vote_account;
+        let mut is_citizen_verified: bool = false;
+
+        let mut iter_ver = election_vote.verify_citizens.iter();
+        if iter_ver.any(|&v: &anchor_lang::prelude::Pubkey| v == citizen_key) {
+            is_citizen_verified = true;
+        }
+
+        if !is_citizen_verified {
+            return err!(CustomError::CitizenIsNotVerify);
+        }
 
         let mut iter = election_vote.citizens.iter();
         if iter.any(|&v: &anchor_lang::prelude::Pubkey| v == citizen_key) {
@@ -31,6 +42,16 @@ pub mod predsident_election {
 
     pub fn vote_for_candidate_two(ctx: Context<Vote>, citizen_key: Pubkey) -> Result<()> {
         let election_vote: &mut Account<ElectionState> = &mut ctx.accounts.vote_account;
+        let mut is_citizen_verified: bool = false;
+
+        let mut iter_ver = election_vote.verify_citizens.iter();
+        if iter_ver.any(|&v: &anchor_lang::prelude::Pubkey| v == citizen_key) {
+            is_citizen_verified = true;
+        }
+
+        if !is_citizen_verified {
+            return err!(CustomError::CitizenIsNotVerify);
+        }
 
         let mut iter = election_vote.citizens.iter();
         if iter.any(|&v: &anchor_lang::prelude::Pubkey| v == citizen_key) {
@@ -39,6 +60,23 @@ pub mod predsident_election {
 
         election_vote.candidate_two_number_of_votes += 1;
         election_vote.citizens.push(citizen_key);
+
+        Ok(())
+    }
+
+    pub fn verify_citizen(ctx: Context<Vote>, citizen_key: Pubkey, validator_key: Pubkey) -> Result<()> {
+        let election_vote: &mut Account<ElectionState> = &mut ctx.accounts.vote_account;
+
+        if validator_key != election_vote.validator {
+            return err!(CustomError::VerifyValidator);
+        }
+
+        let mut iter = election_vote.verify_citizens.iter();
+        if iter.any(|&v: &anchor_lang::prelude::Pubkey| v == citizen_key) {
+            return err!(CustomError::CitizenAlreadyVerify);
+        }
+
+        election_vote.verify_citizens.push(citizen_key);
 
         Ok(())
     }
@@ -68,10 +106,20 @@ pub struct ElectionState {
     bump: u8,
     validator: Pubkey,
     citizens: Vec<Pubkey>,
+    verify_citizens: Vec<Pubkey>,
 }
 
 #[error_code]
 pub enum CustomError {
     #[msg("Citizen already voted.")]
     CitizenAlreadyVote,
+
+    #[msg("Citizen is not verified. Please verify citizen.")]
+    CitizenIsNotVerify,
+
+    #[msg("Citizen already verified.")]
+    CitizenAlreadyVerify,
+
+    #[msg("Only validator/contract owner can initilialize citizens.")]
+    VerifyValidator,
 }

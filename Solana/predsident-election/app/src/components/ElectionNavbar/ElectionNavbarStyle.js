@@ -1,7 +1,7 @@
 import { red } from "@material-ui/core/colors";
 import { makeStyles } from "@material-ui/styles";
 
-export const navbarStyle = makeStyles((theme) => ({
+export const electionNavbarStyle = makeStyles((theme) => ({
     root: {
       backgroundColor: "transparent",
       boxShadow: "none",

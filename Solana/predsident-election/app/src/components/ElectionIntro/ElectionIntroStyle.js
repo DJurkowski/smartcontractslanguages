@@ -1,7 +1,7 @@
 import { green } from "@material-ui/core/colors";
 import { makeStyles } from "@material-ui/styles";
 
-export const introStyle = makeStyles((theme) => ({
+export const electionIntroStyle = makeStyles((theme) => ({
     button: {
       marginTop: theme.spacing(1),
       "&.hidden": {
