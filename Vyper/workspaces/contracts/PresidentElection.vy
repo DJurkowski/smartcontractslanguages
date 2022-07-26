@@ -43,17 +43,18 @@ def __init__(candidateNameFirst: String[20], candidateNameSecond: String[20]):
 def validateVoteRight(voter: address):
     assert msg.sender == self.validator
     assert not self.citizens[voter].isVoted
+    assert not self.citizens[voter].isCitizenValidated
     self.citizens[voter].isCitizenCanVote = True
     self.citizens[voter].isCitizenValidated = True
 
 @external
-def vote(proposal: int128):
+def vote(candidateId: int128):
     assert self.citizens[msg.sender].isCitizenValidated
     assert not self.citizens[msg.sender].isVoted
-    assert proposal < self.numberOfCandidates
-    self.citizens[msg.sender].voteIdentifier = proposal
+    assert candidateId < self.numberOfCandidates
+    self.citizens[msg.sender].voteIdentifier = candidateId
     self.citizens[msg.sender].isVoted = True
-    self.candidates[proposal].numberOfVotes += 1
+    self.candidates[candidateId].numberOfVotes += 1
 
 @view
 @internal
