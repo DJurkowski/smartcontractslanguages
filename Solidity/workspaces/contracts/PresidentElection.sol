@@ -3,6 +3,7 @@
 pragma solidity 0.8.7;
 
 import "hardhat/console.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract PresidentElection {
 
@@ -20,9 +21,9 @@ contract PresidentElection {
 
   address public validator;
 
-  mapping(address => Citizen) public citizens;
+  mapping(address => Citizen) private citizens;
 
-  PresidentCandidate[] public candidates;
+  PresidentCandidate[] private candidates;
 
   constructor(string[] memory candidatesNames) {
     validator = msg.sender;
@@ -50,11 +51,11 @@ contract PresidentElection {
       }
   }
 
-  function compareStringUsingBytes(string memory value1, string memory value2) public pure returns(bool){
+  function compareStringUsingBytes(string memory value1, string memory value2) private pure returns(bool){
         return keccak256(abi.encodePacked(value1)) == keccak256(abi.encodePacked(value2));
     }
 
-  function stringToBytesConverter(string memory value) public pure returns (bytes32 byteValue) {
+  function stringToBytesConverter(string memory value) private pure returns (bytes32 byteValue) {
     bytes memory temp = bytes(value);
     if (temp.length == 0) {
         return 0x0;
@@ -74,11 +75,12 @@ contract PresidentElection {
       !citizens[citizenAddress].isVoted,
       "The citizen already voted."
     );
-    require(citizens[citizenAddress].isCitizenCanVote == false);
+    require(citizens[citizenAddress].isCitizenCanVote == false,
+    "The citizen already has right to vote");
     citizens[citizenAddress].isCitizenCanVote = true;
   }
 
-  function displayListOfCandidates() public {
+  function displayListOfCandidates() public view {
       for (uint i = 0; i < candidates.length; i++) {
           console.log(i, ". ", candidates[i].name);
       }
@@ -93,7 +95,7 @@ contract PresidentElection {
     candidates[candidatesId].numberOfVotes += 1;
   }
 
-  function calculateVotes() public view returns (uint newPresidentId_) {
+  function calculateVotes() private view returns (uint newPresidentId_) {
     uint winningVoteCount = 0;
     for (uint p = 0; p < candidates.length; p++) {
       if (candidates[p].numberOfVotes > winningVoteCount) {
@@ -103,8 +105,12 @@ contract PresidentElection {
     }
   }
 
-  function newPresident() public view returns (string memory newPresident_) {
+  function getNewPresident() public view returns (string memory newPresident_) {
     newPresident_ = candidates[calculateVotes()].name;
+  }
+
+  function getCandidateNumberOfVotes(uint candidateId) public view returns (uint numberOfVotes_) {
+      numberOfVotes_ = candidates[candidateId].numberOfVotes;
   }
 
 }
