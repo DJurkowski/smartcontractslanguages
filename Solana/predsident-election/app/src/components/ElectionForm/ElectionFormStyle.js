@@ -18,8 +18,14 @@ export const electionFormStyle = makeStyles((theme) => ({
 	},
 	input: {
 		"&::placeholder": {
-      color: "white",
-    },
+      		color: "white",
+    	},
+		"& label": {
+			color: "white",
+		},
+		"& fieldset": {
+			borderColor: "white",
+		},
 		"& label.Mui-focused": {
 			color: "white",
 		},

@@ -169,11 +169,11 @@ export default function ElectionMain({ voteAccount, voteAccountBump, network }) 
               <VoteOption side="CandidateTwo" isLeftSide={false} handleVote={handleVote} />
             </Grid>
             <Grid
-             container
-             spacing={0}
-             direction="column"
-             alignItems="center"
-             justify="center"
+              container
+              spacing={0}
+              direction="column"
+              alignItems="center"
+              justify="center"
             >
               <ElectionModalButton handleOpenModal={() => setIsOpenModal(true)} />
             </Grid>
