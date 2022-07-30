@@ -3,9 +3,17 @@
 pragma solidity 0.8.7;
 
 import "hardhat/console.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
 
-contract PresidentElection {
+contract ElectionValidator {
+    address public validator;
+
+    modifier onlyValidator {
+      require(msg.sender == validator, "Only validator can give right to vote.");
+      _;
+   }
+}
+
+contract PresidentElection is ElectionValidator {
 
   struct PresidentCandidate {
     string name;
@@ -18,8 +26,6 @@ contract PresidentElection {
     bool isVoted;
     bool isCitizenCanVote;
   }
-
-  address public validator;
 
   mapping(address => Citizen) private citizens;
 
@@ -66,17 +72,14 @@ contract PresidentElection {
     }
   }
     
-  function verifyCitizen(address citizenAddress) public {
-    require(
-      msg.sender == validator,
-      "Only validator can give right to vote."
-    );
+  function verifyCitizen(address citizenAddress) public onlyValidator {
+    
     require(
       !citizens[citizenAddress].isVoted,
       "The citizen already voted."
     );
     require(citizens[citizenAddress].isCitizenCanVote == false,
-    "The citizen already has right to vote");
+    "The citizen already has right to vote.");
     citizens[citizenAddress].isCitizenCanVote = true;
   }
 
@@ -88,7 +91,7 @@ contract PresidentElection {
 
   function vote(uint candidatesId) public {
     Citizen storage sender = citizens[msg.sender];
-    require(sender.isCitizenCanVote, "Citizen doesn't have right to vote");
+    require(sender.isCitizenCanVote, "Citizen doesn't have right to vote.");
     require(!sender.isVoted, "Citizen already voted.");
     sender.isVoted = true;
     sender.voteIdentifier = candidatesId;
@@ -110,7 +113,10 @@ contract PresidentElection {
   }
 
   function getCandidateNumberOfVotes(uint candidateId) public view returns (uint numberOfVotes_) {
-      numberOfVotes_ = candidates[candidateId].numberOfVotes;
+    if (candidateId < candidates.length && candidateId >= 0) {
+        numberOfVotes_ = candidates[candidateId].numberOfVotes;
+    } else {
+        revert("Invalid candidate id.");
+    }
   }
-
 }

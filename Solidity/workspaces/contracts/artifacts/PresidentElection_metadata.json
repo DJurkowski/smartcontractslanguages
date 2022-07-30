@@ -18,109 +18,33 @@
 			},
 			{
 				"inputs": [],
-				"name": "calculateVotes",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "newPresidentId_",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "candidates",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "name",
-						"type": "string"
-					},
-					{
-						"internalType": "bytes32",
-						"name": "byteName",
-						"type": "bytes32"
-					},
-					{
-						"internalType": "uint256",
-						"name": "numberOfVotes",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"name": "citizens",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "voteIdentifier",
-						"type": "uint256"
-					},
-					{
-						"internalType": "bool",
-						"name": "isVoted",
-						"type": "bool"
-					},
-					{
-						"internalType": "bool",
-						"name": "isCitizenCanVote",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "string",
-						"name": "value1",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "value2",
-						"type": "string"
-					}
-				],
-				"name": "compareStringUsingBytes",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "pure",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "displayListOfCandidates",
 				"outputs": [],
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "candidateId",
+						"type": "uint256"
+					}
+				],
+				"name": "getCandidateNumberOfVotes",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "numberOfVotes_",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
 				"inputs": [],
-				"name": "newPresident",
+				"name": "getNewPresident",
 				"outputs": [
 					{
 						"internalType": "string",
@@ -129,25 +53,6 @@
 					}
 				],
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "string",
-						"name": "value",
-						"type": "string"
-					}
-				],
-				"name": "stringToBytesConverter",
-				"outputs": [
-					{
-						"internalType": "bytes32",
-						"name": "byteValue",
-						"type": "bytes32"
-					}
-				],
-				"stateMutability": "pure",
 				"type": "function"
 			},
 			{
@@ -218,11 +123,11 @@
 	},
 	"sources": {
 		"contracts/PresidentElection.sol": {
-			"keccak256": "0x59168a76acfc114f68f4136b9d57c01acbb3c9b8458967700bc2100e16f3f9e0",
+			"keccak256": "0xa0660eadbff3cec04d2e16eba56a5f410202c8461bdce8e2030db0a37e2f8a97",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://05ff7394f26bb85852792d0528e1af5245d54d3762b2e3253b447a0f25c7d8b3",
-				"dweb:/ipfs/QmNXubXDjt5ExQCLErZt3aLwDntJMSeZzux6yYAyjcthGM"
+				"bzz-raw://f1ccda888bd86e9310985fb274f21e071e14b6dd9a854c49016f682509878d41",
+				"dweb:/ipfs/QmRkJay5nHyBBQFScaJ9XdA5TKYa8LLxqXA3HvgE1KTrL7"
 			]
 		},
 		"hardhat/console.sol": {
