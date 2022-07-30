@@ -4,7 +4,16 @@ pragma solidity 0.8.7;
 
 import "hardhat/console.sol";
 
-contract PresidentElection {
+contract ElectionValidator {
+    address public validator;
+
+    modifier onlyValidator {
+      require(msg.sender == validator, "Only validator can give right to vote.");
+      _;
+   }
+}
+
+contract PresidentElection is ElectionValidator {
 
   struct PresidentCandidate {
     string name;
@@ -18,11 +27,9 @@ contract PresidentElection {
     bool isCitizenCanVote;
   }
 
-  address public validator;
+  mapping(address => Citizen) private citizens;
 
-  mapping(address => Citizen) public citizens;
-
-  PresidentCandidate[] public candidates;
+  PresidentCandidate[] private candidates;
 
   constructor(string[] memory candidatesNames) {
     validator = msg.sender;
@@ -50,11 +57,11 @@ contract PresidentElection {
       }
   }
 
-  function compareStringUsingBytes(string memory value1, string memory value2) public pure returns(bool){
+  function compareStringUsingBytes(string memory value1, string memory value2) private pure returns(bool){
         return keccak256(abi.encodePacked(value1)) == keccak256(abi.encodePacked(value2));
     }
 
-  function stringToBytesConverter(string memory value) public pure returns (bytes32 byteValue) {
+  function stringToBytesConverter(string memory value) private pure returns (bytes32 byteValue) {
     bytes memory temp = bytes(value);
     if (temp.length == 0) {
         return 0x0;
@@ -65,20 +72,18 @@ contract PresidentElection {
     }
   }
     
-  function validateVoteRight(address voter) public {
+  function verifyCitizen(address citizenAddress) public onlyValidator {
+    
     require(
-      msg.sender == validator,
-      "Only validator can give right to vote."
-    );
-    require(
-      !citizens[voter].isVoted,
+      !citizens[citizenAddress].isVoted,
       "The citizen already voted."
     );
-    require(citizens[voter].isCitizenCanVote == false);
-    citizens[voter].isCitizenCanVote = true;
+    require(citizens[citizenAddress].isCitizenCanVote == false,
+    "The citizen already has right to vote.");
+    citizens[citizenAddress].isCitizenCanVote = true;
   }
 
-  function displayListOfCandidates() public {
+  function displayListOfCandidates() public view {
       for (uint i = 0; i < candidates.length; i++) {
           console.log(i, ". ", candidates[i].name);
       }
@@ -86,14 +91,14 @@ contract PresidentElection {
 
   function vote(uint candidatesId) public {
     Citizen storage sender = citizens[msg.sender];
-    require(sender.isCitizenCanVote, "Citizen doesn't have right to vote");
+    require(sender.isCitizenCanVote, "Citizen doesn't have right to vote.");
     require(!sender.isVoted, "Citizen already voted.");
     sender.isVoted = true;
     sender.voteIdentifier = candidatesId;
     candidates[candidatesId].numberOfVotes += 1;
   }
 
-  function calculateVotes() public view returns (uint newPresidentId_) {
+  function calculateVotes() private view returns (uint newPresidentId_) {
     uint winningVoteCount = 0;
     for (uint p = 0; p < candidates.length; p++) {
       if (candidates[p].numberOfVotes > winningVoteCount) {
@@ -103,8 +108,15 @@ contract PresidentElection {
     }
   }
 
-  function newPresident() public view returns (string memory newPresident_) {
+  function getNewPresident() public view returns (string memory newPresident_) {
     newPresident_ = candidates[calculateVotes()].name;
   }
 
+  function getCandidateNumberOfVotes(uint candidateId) public view returns (uint numberOfVotes_) {
+    if (candidateId < candidates.length && candidateId >= 0) {
+        numberOfVotes_ = candidates[candidateId].numberOfVotes;
+    } else {
+        revert("Invalid candidate id.");
+    }
+  }
 }
