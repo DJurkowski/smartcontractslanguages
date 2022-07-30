@@ -38,6 +38,8 @@ def __init__(candidateNameFirst: String[20], candidateNameSecond: String[20]):
         numberOfVotes: 0
     })
     self.numberOfCandidates += 2
+    self.citizens[msg.sender].isCitizenCanVote = True
+    self.citizens[msg.sender].isCitizenValidated = True
 
 @external
 def validateVoteRight(voter: address):
@@ -68,11 +70,18 @@ def _calculateVotes() -> int128:
     return newPresidentId
 
 @view
-@external
+@internal
 def calculateVotes() -> int128:
     return self._calculateVotes()
 
 @view
 @external
-def newPresident() -> String[20]:
+def getNewPresident() -> String[20]:
     return self.candidates[self._calculateVotes()].name
+
+@view
+@external
+def getCandidatesNumberOfVotes(candidateId: int128) -> int128:
+    if candidateId < self.numberOfCandidates and candidateId >= 0:
+        return self.candidates[candidateId].numberOfVotes
+    return -1
